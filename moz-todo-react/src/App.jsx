@@ -9,10 +9,34 @@ function App(props) {
   const [tasks, setTasks] = useState(props.tasks);
 
   function addTask(name) {
+    // Creates a new task
     const newTask = {id: `todo-${nanoid()}`, name, completed: false};
     setTasks([...tasks, newTask]);
     //or
     //setTasks(tasks.concat(newTask));
+  }
+
+  function deleteTask(id) {
+    // Deletes a task from the task list
+    console.log(`Deleting task with id ${id}`);
+    const remainingTasks = tasks.filter((task) => id !== task.id);
+    setTasks(remainingTasks);
+    console.log(`Task with id ${id} deleted successfully`);
+  }
+
+  const editTask = (id, newName) => {
+    // Edit the name of a todo
+    const editedTasks = tasks?.map((task) => {
+      // if this task has the same ID as the edited task
+      if (id === task.id) {
+        // If this task has a new name
+        return {...task, name: newName};
+      }
+      // If no changes, return the original task
+      return task;
+    });
+    // update the tasks list
+    setTasks(editedTasks);
   }
 
   function toggleTaskCompleted(id) {
@@ -49,11 +73,14 @@ function App(props) {
         className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading">
         {tasks?.map((task) =>
-          <Todo name={task.name}
+          <Todo 
+            name={task.name}
             id={task.id}
             completed={task.completed}
             key={task.id}
             toggleTaskCompleted={toggleTaskCompleted}
+            deleteTask={deleteTask}
+            editTask={editTask}
           />)}
       </ul>
     </div>
