@@ -2,21 +2,47 @@ import {  useState } from "react";
 
 function Todo (props) {
   const [isEditing, setEditing] = useState(false);
+  const [newName, setNewName] = useState("");
+
+  function onChange(e) {
+    // changes the newName state
+    setNewName(e.target.value);
+  }
+
+  function onSubmit(e) {
+    // Handle editingTemplate's form submission
+    e.preventDefault();
+    props.editTask(props.id, newName);
+    setNewName("");
+    setEditing(false);
+  }
 
   const editingTemplate = (
-    <form className="stack-small">
+    <form className="stack-small" onSubmit={onSubmit}>
       <div className="form-group">
-        <label className="todo-label" htmlFor={props.id}>
+        <label
+          className="todo-label"
+          htmlFor={props.id}
+        >
           New name for {props.name}
         </label>
-        <input id={props.id} className="todo-text" type="text" />
+        <input
+          id={props.id}
+          className="todo-text"
+          type="text"
+          value={newName}
+          onChange={onChange} 
+        />
       </div>
       <div className="btn-group">
-        <button type="button" className="btn todo-cancel">
+        <button type="button" className="btn todo-cancel" onClick={() => setEditing(false)}>
           Cancel
           <span className="visually-hidden">renaming {props.name}</span>
         </button>
-        <button type="submit" className="btn btn__primary todo-edit">
+        <button
+          type="submit"
+          className="btn btn__primary todo-edit"
+        >
           Save
           <span className="visually-hidden">new name for {props.name}</span>
         </button>
@@ -38,7 +64,11 @@ function Todo (props) {
         </label>
       </div>
       <div className="btn-group">
-        <button type="button" className="btn">
+        <button
+          type="button"
+          className="btn"
+          onClick={() => setEditing(true)}
+        >
           Edit <span className="visually-hidden">{props.name}</span>
         </button>
         <button

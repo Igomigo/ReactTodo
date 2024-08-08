@@ -7,6 +7,27 @@ import { nanoid } from "nanoid";
 function App(props) {
 
   const [tasks, setTasks] = useState(props.tasks);
+  const [filter, setFilter] = useState("All");
+
+  // Determine the name and behaviour of each filter
+  const filter_map = {
+    "All": () => true,
+    "Active": (task) => !task.completed,
+    "Completed": (task) => task.completed
+  }
+
+  // Extract the keys from the filter_map object
+  // Iterate through the filter names array and set the names of each 
+  // filter button based on the filter map name
+  const filter_names = Object.keys(filter_map);
+  const filter_list = filter_names.map((name) => 
+    <FilterButton 
+       key={name}
+       name={name}
+       isPressed={name === filter}
+       setFilter={setFilter}
+    />
+  );
 
   function addTask(name) {
     // Creates a new task
@@ -63,16 +84,14 @@ function App(props) {
       <h1>TodoMatic</h1>
       <Form onAddTask={addTask} />
       <div className="filters btn-group stack-exception">
-        <FilterButton />
-        <FilterButton />
-        <FilterButton />
+        {filter_list}
       </div>
       <h2 id="list-heading">{headingText}</h2>
       <ul
         role="list"
         className="todo-list stack-large stack-exception"
         aria-labelledby="list-heading">
-        {tasks?.map((task) =>
+        {tasks?.filter(filter_map[filter]).map((task) =>
           <Todo 
             name={task.name}
             id={task.id}
