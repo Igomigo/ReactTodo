@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Form(props) {
     // Contains the form data
 
     const [name, setName] = useState("");
+    const editInput = useRef(null);
 
     function HandleSubmit(e) {
         e.preventDefault();
@@ -16,6 +17,10 @@ function Form(props) {
     function HandleChange(e) {
         setName(e.target.value);
     }
+
+    //useEffect(() => {
+      //editInput.current.focus();
+    //}, []);
 
     return (
         <form onSubmit={HandleSubmit}>
@@ -32,6 +37,7 @@ function Form(props) {
           autoComplete="off"
           value={name}
           onChange={HandleChange}
+          ref={editInput}
         />
         <button type="submit" className="btn btn__primary btn__lg">
           Add
